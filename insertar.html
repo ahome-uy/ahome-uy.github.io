@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Modelo 3D · AH OME</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="config.js"></script>
+<script src="trabajos.js"></script>
+<script src="sitio.js"></script>
+<style>
+html,body{height:100%;overflow:hidden}
+.ins{height:100%;display:flex;flex-direction:column}
+.ins .escena{flex:1;min-height:0}
+.credito{display:flex;justify-content:space-between;align-items:center;gap:12px;height:30px;padding:0 max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));background:var(--blanco);border-top:1px solid var(--gris-1);font:400 10px var(--f);letter-spacing:.22em;text-transform:uppercase;color:var(--gris-3)}
+.credito a{text-decoration:none;color:var(--negro);font-weight:500;letter-spacing:.32em}
+.credito a:hover{color:var(--cafe)}
+.credito button{font:inherit;letter-spacing:inherit;text-transform:inherit;background:none;border:0;color:var(--gris-4);cursor:pointer;padding:6px 0}
+.credito button:hover{color:var(--cafe)}
+</style>
+</head>
+<body>
+<div class="ins">
+  <div class="escena" id="escena">
+    <div class="fondo-portada" id="portada" aria-hidden="true"></div>
+    <form class="candado" id="candado" autocomplete="off" hidden>
+      <span class="etiqueta">Modelo 3D</span>
+      <h2 id="c-titulo"></h2>
+      <p>Ingresá la clave para recorrer el modelo.</p>
+      <div class="campo"><input id="clave" type="password" placeholder="Clave" aria-label="Clave" autocapitalize="off" spellcheck="false" required><button class="boton lleno" id="b-abrir" type="submit">Ver en 3D</button></div>
+      <div class="error" id="error" role="alert"></div>
+    </form>
+    <div class="cargando" id="cargando">Cargando modelo 3D…</div>
+    <iframe id="modelo" title="Modelo 3D" allow="fullscreen" allowfullscreen hidden></iframe>
+    <button class="boton salir" id="b-salir" type="button" hidden>Cerrar</button>
+  </div>
+  <div class="credito"><span>Modelo 3D por <a id="marca" href="./" target="_blank" rel="noopener">AH OME</a></span><button id="b-completa" type="button" hidden>Pantalla completa</button></div>
+</div>
+<script>
+(function(){
+  const S=window.SITIO||{}, $=id=>document.getElementById(id);
+  $('marca').textContent=S.nombre||'AH OME';
+  const id=new URLSearchParams(location.search).get('t');
+  const clave=new URLSearchParams(location.hash.slice(1)).get('clave');
+  if(!id){$('cargando').textContent='Modelo no encontrado';return;}
+  let T=null;
+  Portfolio.datos(id).then(t=>{
+    T=t; document.title=`${t.titulo} · ${S.nombre||'AH OME'}`; $('c-titulo').textContent=t.titulo;
+    const p=$('portada'); p.innerHTML=Portfolio.planta(t.id);
+    const img=new Image(); img.alt=''; img.onload=()=>{p.innerHTML='';p.appendChild(img);};
+    img.src=`trabajos/${encodeURIComponent(t.id)}/${encodeURIComponent(t.portada)}`;
+    if(clave) entrar(clave); else {$('cargando').hidden=true;$('candado').hidden=false;}
+  });
+  async function entrar(c){
+    $('error').textContent='';
+    try{
+      const html=await Portfolio.abrir(T,c);
+      const fr=$('modelo'); fr.src=URL.createObjectURL(new Blob([html],{type:'text/html'})); fr.hidden=false;
+      $('candado').hidden=true; $('portada').hidden=true; $('cargando').hidden=true; $('b-completa').hidden=false;
+    }catch(e){
+      $('cargando').hidden=true; $('candado').hidden=false;
+      $('error').textContent=e.message==='clave'?'El enlace no tiene una clave válida.':e.message==='falta'?'Este modelo no está disponible.':'Este navegador no puede abrir el modelo.';
+    }
+  }
+  $('candado').onsubmit=e=>{e.preventDefault();const c=$('clave').value.trim();if(c&&T)entrar(c);};
+  const pseudo=on=>{document.body.classList.toggle('completa',on);$('b-salir').hidden=!on;};
+  $('b-completa').onclick=()=>{const el=$('escena');
+    if(el.requestFullscreen) el.requestFullscreen().catch(()=>window.open(location.href,'_blank'));
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else window.open(location.href,'_blank');};
+  $('b-salir').onclick=()=>pseudo(false);
+})();
+</script>
+</body>
+</html>

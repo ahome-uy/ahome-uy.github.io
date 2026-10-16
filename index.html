@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>AH OME</title>
+<meta name="description" content="AH OME · Modelos 3D interactivos de arquitectura e interiores.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AH OME">
+<meta property="og:description" content="Modelos 3D interactivos de arquitectura e interiores.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121212'/%3E%3Crect x='7' y='22' width='18' height='2' fill='%234A3428'/%3E%3Ctext x='16' y='19' font-family='Futura,Arial' font-size='11' letter-spacing='1' fill='white' text-anchor='middle'%3EAH%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<script src="config.js"></script>
+<script src="trabajos.js"></script>
+<script src="sitio.js"></script>
+</head>
+<body>
+  <header class="cabecera envoltura">
+    <div class="fila">
+      <a class="marca" href="./" id="marca"></a>
+      <nav class="contacto" id="contacto" aria-label="Contacto"></nav>
+    </div>
+  </header>
+  <main>
+    <section class="portada envoltura">
+      <h1 id="nombre"></h1>
+      <div class="detalle" aria-hidden="true"></div>
+      <p class="bajada" id="bajada"></p>
+      <p class="texto" id="presentacion"></p>
+    </section>
+    <section class="seccion envoltura" aria-labelledby="rt">
+      <div class="rotulo"><span class="etiqueta" id="rt">Trabajos</span><span class="etiqueta" id="cuenta"></span></div>
+      <div class="grilla" id="grilla"><div class="vacio etiqueta">Cargando</div></div>
+    </section>
+  </main>
+  <footer class="pie envoltura"><span class="etiqueta" id="pie-nombre"></span><span class="etiqueta">Modelos 3D interactivos</span></footer>
+
+<script>
+(function(){
+  const S=window.SITIO||{}, C=S.contacto||{};
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  document.title=S.nombre||'Trabajos';
+  $('marca').textContent=S.nombre||'Trabajos';
+  $('nombre').textContent=S.nombre||'Trabajos';
+  $('bajada').textContent=S.bajada||''; $('bajada').hidden=!S.bajada;
+  $('presentacion').textContent=S.presentacion||''; $('presentacion').hidden=!S.presentacion;
+  $('pie-nombre').textContent=`© ${new Date().getFullYear()} ${S.nombre||''}`;
+  const links=[];
+  if(C.email)links.push(`<a href="mailto:${esc(C.email)}">Email</a>`);
+  if(C.whatsapp)links.push(`<a href="https://wa.me/${esc(String(C.whatsapp).replace(/\D/g,''))}" target="_blank" rel="noopener">WhatsApp</a>`);
+  if(C.instagram)links.push(`<a href="https://instagram.com/${esc(String(C.instagram).replace(/^@/,''))}" target="_blank" rel="noopener">Instagram</a>`);
+  $('contacto').innerHTML=links.join('');
+
+  Portfolio.todos().then(items=>{
+    const g=$('grilla');
+    $('cuenta').textContent=items.length?String(items.length).padStart(2,'0')+(items.length===1?' proyecto':' proyectos'):'';
+    if(!items.length){g.innerHTML='<div class="vacio etiqueta">Todavía no hay trabajos cargados</div>';return;}
+    g.innerHTML='';
+    items.forEach((t,i)=>{
+      const a=document.createElement('a'); a.className='tarjeta'; a.href=`ver.html?t=${encodeURIComponent(t.id)}`;
+      a.innerHTML=`<div class="img">${Portfolio.planta(t.id)}<img alt="" loading="lazy"></div>
+        <div class="pie-t"><span class="num">${String(i+1).padStart(2,'0')}</span><h2>${esc(t.titulo)}</h2><span class="ir">Ver en 3D</span>
+        <div class="meta">${esc(Portfolio.meta(t))}</div>${t.descripcion?`<p>${esc(t.descripcion)}</p>`:''}</div>`;
+      const img=a.querySelector('img'); img.hidden=true;
+      img.onload=()=>{img.hidden=false;}; img.onerror=()=>img.remove();
+      img.src=`trabajos/${encodeURIComponent(t.id)}/${encodeURIComponent(t.portada)}`;
+      g.appendChild(a);
+    });
+  });
+})();
+</script>
+</body>
+</html>
