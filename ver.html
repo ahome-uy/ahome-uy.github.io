@@ -105,7 +105,7 @@
   $('b-info').onclick=()=>{$('ficha').hidden=!$('ficha').hidden;$('material').hidden=true;};
   $('b-cerrar').onclick=()=>{$('ficha').hidden=true;};
   $('b-compartir').onclick=async()=>{
-    const u=location.origin+location.pathname+location.search, title=document.title;   // nunca incluye la clave
+    const u=new URL(encodeURIComponent(id)+'/',location.href).href, title=document.title;   // enlace corto con vista previa; nunca incluye la clave
     if(navigator.share){try{await navigator.share({title,url:u});return;}catch(e){if(e&&e.name==='AbortError')return;}}
     try{await navigator.clipboard.writeText(u);aviso('Enlace copiado (sin la clave)');}catch(e){prompt('Copiá este enlace:',u);}
   };
