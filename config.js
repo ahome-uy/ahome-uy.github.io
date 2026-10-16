@@ -21,7 +21,7 @@ window.SITIO = {
   // Si publicás en GitHub Pages, poné tu usuario y el nombre del repositorio.
   // Así cada carpeta nueva que subas dentro de "trabajos" aparece sola en el sitio.
   github: {
-    usuario: "contactoagustinhuelmo-web",
-    repo: "ahome"
+    usuario: "ahome-uy",
+    repo: "ahome-uy.github.io"
   }
 };
