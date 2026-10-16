@@ -61,9 +61,9 @@
     g.innerHTML='';
     items.forEach((t,i)=>{
       const a=document.createElement('a'); a.className='tarjeta'; a.href=`ver.html?t=${encodeURIComponent(t.id)}`;
-      a.innerHTML=`<div class="img">${Portfolio.planta(t.id)}<img alt="" loading="lazy"></div>
+      a.innerHTML=`<div class="img">${Portfolio.planta(t.id)}<img alt="" decoding="async"></div>
         <div class="pie-t"><span class="num">${String(i+1).padStart(2,'0')}</span><h2>${esc(t.titulo)}</h2><span class="ir">Ver en 3D</span>
-        <div class="meta">${esc(Portfolio.meta(t))}</div>${t.descripcion?`<p>${esc(t.descripcion)}</p>`:''}</div>`;
+        <div class="meta">${esc(Portfolio.meta(t))}</div></div>`;
       const img=a.querySelector('img'); img.hidden=true;
       img.onload=()=>{img.hidden=false;}; img.onerror=()=>img.remove();
       img.src=`trabajos/${encodeURIComponent(t.id)}/${encodeURIComponent(t.portada)}`;
