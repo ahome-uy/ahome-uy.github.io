@@ -3,5 +3,6 @@
    Con GitHub configurado, el sitio lee las carpetas solo y esta lista se ignora. */
 window.TRABAJOS = [
   "apartamento",
-  "casa-duarte"
+  "casa-duarte",
+  "distrito-m-905"
 ];
