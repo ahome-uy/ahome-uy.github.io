@@ -45,7 +45,7 @@
 
   async function todos(){
     const ids=await carpetas();
-    const items=await Promise.all(ids.map(datos));
+    const items=(await Promise.all(ids.map(datos))).filter(t=>!t.oculto);   // los trabajos de prueba no aparecen en la lista
     return items.sort((a,b)=>(a.orden-b.orden)||(String(b.anio).localeCompare(String(a.anio)))||a.titulo.localeCompare(b.titulo));
   }
 

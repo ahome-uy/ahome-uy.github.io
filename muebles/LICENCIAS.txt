@@ -1,0 +1,8 @@
+Modelos 3D de terceros usados en los modelos de AH OME
+
+sillon.glb  – "Sheen Chair" (Wayfair / Khronos glTF Sample Assets). CC0 1.0.
+florero.glb – "Glass Vase with Flowers" (Khronos glTF Sample Assets). CC0 1.0.
+planta.glb  – "Diffuse Transmission Plant": asset original de Rico Cilliers (CC0 1.0);
+              materiales de Eric Chadwick / Darmstadt Graphics Group GmbH, 2024 (CC BY 4.0).
+              https://creativecommons.org/licenses/by/4.0/
+Texturas reducidas de tamaño; colores ajustados en el modelo.
